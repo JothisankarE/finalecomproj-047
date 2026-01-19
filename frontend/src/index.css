@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-blue: #007bff;
+  --secondary-blue: #0056b3;
+  --bg-color: #e6f2ff;
+  /* Light blue background */
+  --structure-bg: #ffffff;
+
+  /* Text Colors */
+  --text-primary: #333333;
+  /* Default dark text */
+  --text-secondary: #555555;
+  --text-light: #f0f0f0;
+  /* Keep for dark overlays (Header, etc) */
+  --text-muted: #888888;
+
+  /* Glassmorphism for Light Mode */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  /* Darker border for visibility on light bg */
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --border-radius: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-blue);
+}
+
+.app {
+  width: 85%;
+  margin: 40px auto;
+  background-color: var(--structure-bg);
+  /* Structure the content */
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  min-height: 80vh;
+  /* Ensure some height */
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-blue);
+  border-radius: 5px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1050px) {
+  .app {
+    width: 95%;
+  }
+}

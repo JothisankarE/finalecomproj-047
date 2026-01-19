@@ -1,0 +1,149 @@
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--structure-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.item-link {
+    width: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-blue);
+}
+
+.item-img-container {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.item:hover .item-image {
+    transform: scale(1.1);
+}
+
+.item-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.item-name-rating {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-name-rating p {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.item-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.item-price {
+    font-size: 18px;
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+/* Button Styles */
+/* Button Styles - Hidden by default for animation */
+.add-to-cart,
+.remove-from-cart {
+    background: transparent;
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-weight: 600;
+
+    /* Animation Initial State */
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Hover Effects */
+.item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary-blue);
+}
+
+.item:hover .item-image {
+    transform: scale(1.08);
+    /* Slightly larger zoom */
+}
+
+/* Reveal buttons on hover */
+.item:hover .add-to-cart,
+.item:hover .remove-from-cart {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.add-to-cart:hover {
+    background: var(--primary-blue);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+    /* Subtle lift on button hover */
+}
+
+.remove-from-cart {
+    border-color: #ff4c24;
+    color: #ff4c24;
+}
+
+.remove-from-cart:hover {
+    background: #ff4c24;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(255, 76, 36, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .item {
+        width: 100%;
+        margin: 0;
+    }
+}

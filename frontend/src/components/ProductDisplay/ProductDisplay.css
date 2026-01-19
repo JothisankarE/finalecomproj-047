@@ -1,0 +1,31 @@
+.display {
+    margin: 50px auto;
+    padding: 50px 30px;
+    width: 95%;
+    max-width: 1400px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e6f2ff 100%);
+    /* Slightly deeper blue for contrast with ExploreMenu */
+    box-shadow: 0 10px 40px rgba(0, 50, 150, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+.display h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+    text-align: center;
+    /* Center the title */
+    letter-spacing: -0.5px;
+}
+
+.display-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    margin-top: 30px;
+    gap: 30px;
+    row-gap: 50px;
+}

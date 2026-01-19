@@ -1,0 +1,263 @@
+.place-order {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin: 50px auto;
+  max-width: 900px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 80vh;
+}
+
+.place-order-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Delivery Information Section */
+.place-order-left {
+  width: 100%;
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f3f5;
+}
+
+.place-order-left h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #212529;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.place-order-left input {
+  margin-bottom: 18px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #495057;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.place-order-left input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.place-order-left input::placeholder {
+  color: #adb5bd;
+}
+
+.place-order-left .multi-field {
+  display: flex;
+  gap: 15px;
+}
+
+/* Cart Totals & Payment Section */
+.place-order-right {
+  width: 100%;
+}
+
+.cart-total {
+  padding: 35px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f3f5;
+  margin-bottom: 25px;
+}
+
+.cart-total h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  margin: 18px 0;
+  font-size: 16px;
+  color: #6c757d;
+}
+
+.cart-total-details b {
+  font-weight: 700;
+  color: #212529;
+  font-size: 1.2rem;
+}
+
+.cart-total hr {
+  border: none;
+  height: 1px;
+  background: #e9ecef;
+  margin: 20px 0;
+}
+
+/* Payment Method Section */
+.payment-method {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f3f5;
+}
+
+.payment-method h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 20px;
+}
+
+/* Payment Method Buttons */
+.payment-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  margin: 12px 0;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  background: #f8f9fa;
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.payment-btn:hover {
+  background: white;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.payment-btn.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.payment-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Place Order Button */
+.place-order-submit {
+  width: 100%;
+  padding: 18px;
+  margin-top: 25px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.place-order-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  background: linear-gradient(135deg, #ee5a6f 0%, #ff6b6b 100%);
+}
+
+.place-order-submit:active {
+  transform: translateY(0);
+}
+
+/* Card Details Section (if needed) */
+.card-details {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 20px;
+  border: 2px solid #e9ecef;
+}
+
+.card-details h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 15px;
+}
+
+.card-details input {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #495057;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.card-details input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 700px) {
+  .place-order {
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  .place-order-left,
+  .cart-total,
+  .payment-method {
+    padding: 25px;
+  }
+
+  .place-order-left h2,
+  .cart-total h2 {
+    font-size: 20px;
+  }
+
+  .place-order-left .multi-field {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .payment-btn {
+    font-size: 15px;
+    padding: 14px 18px;
+  }
+
+  .place-order-submit {
+    font-size: 16px;
+    padding: 16px;
+  }
+}

@@ -1,0 +1,119 @@
+.list {
+    width: 100%;
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.list p.title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-main);
+    border-left: 6px solid var(--primary);
+    padding-left: 16px;
+    line-height: 1;
+}
+
+.list-table {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border-solid);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.list-table-format {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1fr 1.2fr 0.8fr;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-solid);
+    transition: all 0.2s ease;
+    color: var(--text-main);
+}
+
+.list-table-format.title {
+    background: rgba(224, 242, 254, 0.3);
+    /* Mild light blue tint */
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+}
+
+.list-table-format:not(.title):hover {
+    background: rgba(224, 242, 254, 0.1);
+}
+
+.list-table-format:last-child {
+    border-bottom: none;
+}
+
+.list-table-format img.main-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid var(--border-solid);
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+}
+
+.stock-badge {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+}
+
+.stock-badge.good {
+    background: #ecfdf5;
+    color: #10b981;
+    border: 1px solid #d1fae5;
+}
+
+.stock-badge.low {
+    background: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fee2e2;
+}
+
+.cursor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    background: #ffffff;
+    border: 1px solid var(--border-solid);
+    box-shadow: var(--shadow-sm);
+}
+
+.cursor:hover {
+    color: #ef4444;
+    border-color: #fee2e2;
+    background: #fef2f2;
+    transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
