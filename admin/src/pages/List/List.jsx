@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const List = () => {
 
   const [list, setList] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editStock, setEditStock] = useState("");
 
   const fetchList = async () => {
     const response = await axios.get(`${url}/api/food/list`)
@@ -31,54 +33,100 @@ const List = () => {
     }
   }
 
+  const updateStockValue = async (id) => {
+    try {
+      const response = await axios.post(`${url}/api/food/update-stock`, {
+        id: id,
+        stock: editStock
+      })
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setEditingId(null);
+        await fetchList();
+      } else {
+        toast.error("Error updating stock");
+      }
+    } catch (error) {
+      toast.error("Network Error");
+    }
+  }
+
   useEffect(() => {
     fetchList();
-
-    // Polling for inventory updates every 5 seconds
-    const interval = setInterval(() => {
-      fetchList();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, [])
 
   return (
-    <div className='list flex-col'>
-      <p className="title">Product Inventory</p>
+    <div className='list'>
+      <div className="list-header">
+        <div className="list-header-left">
+          <p className="title">Product Inventory</p>
+          <span className="item-count-badge">{list.length} items found</span>
+        </div>
+      </div>
+
       <div className='list-table'>
         <div className="list-table-format title">
-          <b>Image</b>
-          <b>Name</b>
+          <b>Preview</b>
+          <b>Product Details</b>
           <b>Category</b>
           <b>Price</b>
           <b>Stock Status</b>
-          <b>Action</b>
+          <b>Actions</b>
         </div>
         {list.map((item, index) => {
           const isLowStock = item.stock < 10;
           return (
-            <div key={index} className='list-table-format'>
+            <div key={index} className='list-table-format' style={{ animationDelay: `${index * 0.05}s` }}>
               <div className="product-images-cell">
                 <img src={`${url}/images/` + item.image} alt={item.name} className="main-img" />
-                {item.extraImages && item.extraImages.length > 0 && (
-                  <div className="extra-images-row">
-                    {item.extraImages.map((img, i) => (
-                      <img key={i} src={`${url}/images/` + img} alt="extra" className="extra-img" />
-                    ))}
+              </div>
+
+              <div className="product-info-cell">
+                <p className="product-name">{item.name}</p>
+                {/* <p className="product-desc">{item.description.substring(0, 30)}...</p> */}
+              </div>
+
+              <div className="category-cell">
+                <span className="category-tag">{item.category}</span>
+              </div>
+
+              <div className="price-cell">
+                <p className="price-text">₹{item.price}</p>
+              </div>
+
+              <div className="stock-cell">
+                {editingId === item._id ? (
+                  <div className="stock-edit-container">
+                    <input
+                      type="number"
+                      className="stock-input"
+                      value={editStock}
+                      onChange={(e) => setEditStock(e.target.value)}
+                      autoFocus
+                    />
+                    <button className="stock-action-btn save" onClick={() => updateStockValue(item._id)}>✓</button>
+                    <button className="stock-action-btn cancel" onClick={() => setEditingId(null)}>✕</button>
                   </div>
+                ) : (
+                  <span
+                    className={`stock-badge ${isLowStock ? 'low' : 'good'}`}
+                    onClick={() => {
+                      setEditingId(item._id);
+                      setEditStock(item.stock || 0);
+                    }}
+                    title="Click to edit stock"
+                  >
+                    <span className="stock-dot"></span>
+                    {item.stock || 0} {isLowStock ? 'Low Stock' : 'In Stock'}
+                  </span>
                 )}
               </div>
-              <p>{item.name}</p>
-              <p>{item.category}</p>
-              <p>₹{item.price}</p>
-              <div>
-                <span className={`stock-badge ${isLowStock ? 'low' : 'good'}`}>
-                  {item.stock || 0} {isLowStock ? 'Low' : 'In Stock'}
-                </span>
+
+              <div className="actions-cell">
+                <button className="delete-btn" onClick={() => removeItem(item._id)} title="Delete Product">
+                  <span role="img" aria-label="delete">🗑️</span>
+                </button>
               </div>
-              <p className='cursor' onClick={() => removeItem(item._id)}>
-                <span role="img" aria-label="delete">🗑️</span>
-              </p>
             </div>
           )
         })}

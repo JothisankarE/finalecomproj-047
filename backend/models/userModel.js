@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: false },
     confirmationToken: { type: String },
     cartData: { type: Object, default: {} },
+    address: { type: String, default: "" },
+    theme: { type: String, default: "light" },
+    image: { type: String, default: "" },
     lastLogin: { type: Date, default: null },
     lastLogout: { type: Date, default: null },
     suspendedUntil: { type: Date, default: null }

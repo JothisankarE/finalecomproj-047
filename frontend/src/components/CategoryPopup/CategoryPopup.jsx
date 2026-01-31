@@ -74,6 +74,7 @@ const CategoryPopup = () => {
                                     price={item.price}
                                     desc={item.description}
                                     image={item.image}
+                                    stock={item.stock}
                                 />
                             ))
                         ) : (

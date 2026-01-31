@@ -13,7 +13,7 @@ const ProductDisplay = ({ category }) => {
       <div className='display-list'>
         {product_list.map((item) => {
           if (category === "All" || category === item.category) {
-            return <ProductItem key={item._id} image={item.image} name={item.name} desc={item.description} price={item.price} id={item._id} />
+            return <ProductItem key={item._id} image={item.image} name={item.name} desc={item.description} price={item.price} id={item._id} stock={item.stock} />
           }
         })}
       </div>

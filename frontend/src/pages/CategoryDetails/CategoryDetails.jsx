@@ -33,7 +33,8 @@ const CategoryDetails = () => {
                             description={item.description}
                             price={item.price}
                             image={item.image}
-                            desc={item.description} // Pass description if ProductItem uses it
+                            desc={item.description}
+                            stock={item.stock}
                         />
                     ))
                 ) : (

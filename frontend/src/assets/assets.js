@@ -1,4 +1,5 @@
 import basket_icon from './basket_icon.png'
+import mat_logo from './mat_logo.png'
 
 
 import search_icon from './search_icon.png'
@@ -27,9 +28,9 @@ import logout_icon from './logout_icon.png'
 import parcel_icon from './parcel_icon.png'
 
 export const assets = {
-   
+    mat_logo,
     basket_icon,
-    
+
     search_icon,
     rating_starts,
     add_icon_green,

@@ -1,138 +1,25 @@
-// import React, { useContext, useState } from 'react'
-// import './LoginPopup.css'
-// import { assets } from '../../assets/assets'
-// import { StoreContext } from '../../Context/StoreContext'
-// import axios from 'axios'
-// import { toast } from 'react-toastify'
-
-// const LoginPopup = ({ setShowLogin }) => {
-
-//     const { setToken, url, loadCartData } = useContext(StoreContext)
-//     const [currState, setCurrState] = useState("Sign Up");
-//     const [errorMessage, setErrorMessage] = useState(""); // New state for error message
-
-//     const [data, setData] = useState({
-//         name: "",
-//         email: "",
-//         password: ""
-//     })
-
-//     const onChangeHandler = (event) => {
-//         const name = event.target.name
-//         const value = event.target.value
-
-//         // Name validation to ensure only characters are allowed
-//         if (name === 'name') {
-//             const regex = /^[A-Za-z\s]*$/;  // Only letters and spaces
-//             if (!regex.test(value)) {
-//                 setErrorMessage("Name can only contain letters.");
-//             } else {
-//                 setErrorMessage("");  // Clear error message if valid
-//             }
-//         }
-
-//         setData(data => ({ ...data, [name]: value }))
-//     }
-
-//     const onLogin = async (e) => {
-//         e.preventDefault()
-
-//         // Prevent submission if name has invalid characters
-//         if (errorMessage) {
-//             toast.error("Username should be in alphabet format");
-//             return;
-//         }
-
-//         let new_url = url;
-//         if (currState === "Login") {
-//             new_url += "/api/user/login";
-//         }
-//         else {
-//             new_url += "/api/user/register"
-//         }
-//         const response = await axios.post(new_url, data);
-//         if (response.data.success) {
-//             setToken(response.data.token)
-//             localStorage.setItem("token", response.data.token)
-//             loadCartData({ token: response.data.token })
-//             setShowLogin(false)
-//         }
-//         else {
-//             toast.error(response.data.message)
-//         }
-//     }
-
-//     return (
-//         <div className='login-popup'>
-//             <form onSubmit={onLogin} className="login-popup-container">
-//                 <div className="login-popup-title">
-//                     <h2>{currState}</h2> <img onClick={() => setShowLogin(false)} src={assets.cross_icon} alt="" />
-//                 </div>
-//                 <div className="login-popup-inputs">
-//                     {currState === "Sign Up" ? (
-//                         <>
-//                             <input
-//                                 name='name'
-//                                 onChange={onChangeHandler}
-//                                 value={data.name}
-//                                 type="text"
-//                                 placeholder='Your name'
-//                                 required
-//                             />
-//                             {errorMessage && <p className="error-message">{errorMessage}</p>}  {/* Display error message */}
-//                         </>
-//                     ) : <></>}
-//                     <input
-//                         name='email'
-//                         onChange={onChangeHandler}
-//                         value={data.email}
-//                         type="email"
-//                         placeholder='Your email'
-//                         required
-//                     />
-//                     <input
-//                         name='password'
-//                         onChange={onChangeHandler}
-//                         value={data.password}
-//                         type="password"
-//                         placeholder='Password'
-//                         required
-//                     />
-//                 </div>
-//                 <button>{currState === "Login" ? "Login" : "Create account"}</button>
-//                 <div className="login-popup-condition">
-//                     <input type="checkbox" required />
-//                     <p>By continuing, I agree to the terms of use & privacy policy.</p>
-//                 </div>
-//                 {currState === "Login"
-//                     ? <p>Create a new account? <span onClick={() => setCurrState('Sign Up')}>Click here</span></p>
-//                     : <p>Already have an account? <span onClick={() => setCurrState('Login')}>Login here</span></p>
-//                 }
-//             </form>
-//         </div>
-//     )
-// }
-
-// export default LoginPopup
-
-
 import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './LoginPopup.css';
-import { assets } from '../../assets/assets';
 import { StoreContext } from '../../Context/StoreContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { FaUser, FaEnvelope, FaLock, FaTimes, FaGoogle, FaFacebookF, FaArrowRight, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPopup = ({ setShowLogin }) => {
     const { setToken, url, loadCartData } = useContext(StoreContext);
-    const [currState, setCurrState] = useState("Login"); // Default to Login, but logic supports switching
+    const [currState, setCurrState] = useState("Login");
     const [errorMessage, setErrorMessage] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [data, setData] = useState({
         name: "",
         email: "",
-        password: ""
+        password: "",
+        confirmPassword: ""
     });
 
     const navigate = useNavigate();
@@ -143,11 +30,15 @@ const LoginPopup = ({ setShowLogin }) => {
 
         if (name === 'name') {
             const regex = /^[A-Za-z\s]*$/;
-            if (!regex.test(value)) {
-                setErrorMessage("Name can only contain letters.");
-            } else {
-                setErrorMessage("");
-            }
+            setErrorMessage(!regex.test(value) ? "Name can only contain letters." : "");
+        }
+
+        if (name === 'confirmPassword') {
+            setPasswordError(value !== data.password ? "Passwords do not match" : "");
+        }
+
+        if (name === 'password' && data.confirmPassword) {
+            setPasswordError(value !== data.confirmPassword ? "Passwords do not match" : "");
         }
 
         setData(data => ({ ...data, [name]: value }));
@@ -156,18 +47,25 @@ const LoginPopup = ({ setShowLogin }) => {
     const onLogin = async (e) => {
         e.preventDefault();
 
-        // Check validation only for Sign Up
-        if (currState === "Sign Up" && errorMessage) {
-            toast.error("Username should be in alphabet format");
-            return;
+        if (currState === "Sign Up") {
+            if (errorMessage) {
+                toast.error("Please fix the validation errors");
+                return;
+            }
+            if (data.password !== data.confirmPassword) {
+                toast.error("Passwords do not match");
+                return;
+            }
+            if (data.password.length < 6) {
+                toast.error("Password must be at least 6 characters");
+                return;
+            }
         }
 
-        let new_url = url;
-        if (currState === "Login") {
-            new_url += "/api/user/login";
-        } else {
-            new_url += "/api/user/register";
-        }
+        setIsLoading(true);
+
+        const endpoint = currState === "Login" ? "/api/user/login" : "/api/user/register";
+        const new_url = `${url}${endpoint}`;
 
         try {
             const response = await axios.post(new_url, data);
@@ -176,90 +74,186 @@ const LoginPopup = ({ setShowLogin }) => {
                 localStorage.setItem("token", response.data.token);
                 loadCartData({ token: response.data.token });
                 setShowLogin(false);
-                if (currState === "Sign Up") {
-                    navigate("/confirm");
-                }
+                if (currState === "Sign Up") navigate("/confirm");
+                toast.success(currState === "Login" ? "Welcome back!" : "Account created successfully!");
             } else {
                 toast.error(response.data.message);
             }
         } catch (error) {
             toast.error("An error occurred. Please try again.");
-            console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className='login-popup'>
-            <div className="login-popup-container">
+        <div className='login-popup-overlay' onClick={(e) => e.target.className === 'login-popup-overlay' && setShowLogin(false)}>
+            <div className={`login-popup-container ${currState === "Sign Up" ? "sign-up-mode" : ""}`}>
+                
+                {/* Close Button */}
+                <button className="popup-close-btn" onClick={() => setShowLogin(false)}>
+                    <FaTimes />
+                </button>
 
-                {/* Form Section (Left Side visually via CSS order: 1) */}
-                <form onSubmit={onLogin} className="login-popup-form-section">
-                    <div className="login-popup-title">
-                        <h2>{currState === "Sign Up" ? "Sign up to Handloom" : "Sign In to Handloom"}</h2>
-                        <div className="social-login">
-                            <div className="social-icon">f</div>
-                            <div className="social-icon">G</div>
-                            <div className="social-icon">a</div>
+                {/* Left Panel - Branding & Info */}
+                <div className="login-panel left-panel">
+                    <div className="panel-content">
+                        <div className="brand-header">
+                            <span className="brand-icon">🧵</span>
+                            <span className="brand-name">Handloom</span>
                         </div>
-                        <p style={{ textAlign: 'center', color: '#999', fontSize: '13px', marginBottom: '10px' }}>or do via email</p>
-                        {currState === "Login" && (
-                            <p style={{ textAlign: 'center', color: '#2196f3', fontSize: '12px', marginBottom: '15px', fontWeight: '500' }}>
-                                Demo: user@example.com / password123
+                        <div className="panel-text">
+                            <h1>{currState === "Login" ? "Welcome Back!" : "Join Us!"}</h1>
+                            <p>
+                                {currState === "Login" 
+                                    ? "Access your orders, wishlist, and recommendations." 
+                                    : "Create an account to unlock exclusive offers and faster checkout."}
                             </p>
-                        )}
+                        </div>
+                        <div className="panel-features">
+                            <div className="p-feature"><span>✨</span> Premium Quality</div>
+                            <div className="p-feature"><span>🚚</span> Fast Delivery</div>
+                            <div className="p-feature"><span>🛡️</span> Secure Payment</div>
+                        </div>
                     </div>
-
-                    <div className="login-popup-inputs">
-                        {currState === "Sign Up" && (
-                            <>
-                                <input
-                                    name='name'
-                                    onChange={onChangeHandler}
-                                    value={data.name}
-                                    type="text"
-                                    placeholder='Your name'
-                                    required
-                                />
-                                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                            </>
-                        )}
-                        <input
-                            name='email'
-                            onChange={onChangeHandler}
-                            value={data.email}
-                            type="email"
-                            placeholder='Email address'
-                            required
-                        />
-                        <input
-                            name='password'
-                            onChange={onChangeHandler}
-                            value={data.password}
-                            type="password"
-                            placeholder='Password'
-                            required
-                        />
-                    </div>
-
-                    <button className="submit-btn">{currState === "Login" ? "Sign In" : "Sign Up"}</button>
-
-                    <div className="login-popup-condition">
-                        <p>{currState === "Sign Up" ? "Already have an account?" : "Don't have an account?"} <span onClick={() => setCurrState(currState === "Login" ? "Sign Up" : "Login")} style={{ color: 'var(--primary-blue)', cursor: 'pointer', fontWeight: 'bold' }}>{currState === "Login" ? "Sign Up" : "Sign In"}</span></p>
-                    </div>
-                </form>
-
-                {/* Sidebar (Right Side visually via CSS order: 2) - Image Only */}
-                <div className="login-popup-sidebar">
-                    <img
-                        onClick={() => setShowLogin(false)}
-                        src={assets.cross_icon}
-                        alt="Close"
-                        className="close-on-image"
-                    />
+                    <div className="panel-decoration"></div>
                 </div>
 
+                {/* Right Panel - Form */}
+                <div className="login-panel right-panel">
+                    <div className="form-container">
+                        <div className="form-header">
+                            <h2>{currState === "Login" ? "Sign In" : "Create Account"}</h2>
+                            <p className="subtitle">
+                                {currState === "Login" ? "Please login to continue" : "Get started with your free account"}
+                            </p>
+                        </div>
+
+                        <form onSubmit={onLogin} className="auth-form">
+                            {currState === "Sign Up" && (
+                                <div className="form-group">
+                                    <div className="input-wrapper">
+                                        <FaUser className="field-icon" />
+                                        <input
+                                            type="text"
+                                            name='name'
+                                            placeholder='Full Name'
+                                            value={data.name}
+                                            onChange={onChangeHandler}
+                                            required
+                                        />
+                                    </div>
+                                    {errorMessage && <span className="field-error">{errorMessage}</span>}
+                                </div>
+                            )}
+
+                            <div className="form-group">
+                                <div className="input-wrapper">
+                                    <FaEnvelope className="field-icon" />
+                                    <input
+                                        type="email"
+                                        name='email'
+                                        placeholder='Email Address'
+                                        value={data.email}
+                                        onChange={onChangeHandler}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <div className="input-wrapper">
+                                    <FaLock className="field-icon" />
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name='password'
+                                        placeholder='Password'
+                                        value={data.password}
+                                        onChange={onChangeHandler}
+                                        required
+                                    />
+                                    <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {currState === "Sign Up" && (
+                                <div className="form-group">
+                                    <div className="input-wrapper">
+                                        <FaLock className="field-icon" />
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            name='confirmPassword'
+                                            placeholder='Confirm Password'
+                                            value={data.confirmPassword}
+                                            onChange={onChangeHandler}
+                                            required
+                                        />
+                                        <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
+                                    </div>
+                                    {passwordError && <span className="field-error">{passwordError}</span>}
+                                </div>
+                            )}
+
+                            {currState === "Login" && (
+                                <div className="form-extras">
+                                    <label className="remember-me">
+                                        <input type="checkbox" />
+                                        <span className="custom-checkbox"></span>
+                                        <span>Remember me</span>
+                                    </label>
+                                    <a href="#" className="forgot-link">Forgot Password?</a>
+                                </div>
+                            )}
+
+                             {currState === "Sign Up" && (
+                                <div className="form-extras">
+                                     <label className="remember-me text-sm">
+                                        <input type="checkbox" required />
+                                        <span className="custom-checkbox"></span>
+                                        <span>I agree to Terms & Privacy</span>
+                                    </label>
+                                </div>
+                            )}
+
+                            <button type="submit" className="submit-btn" disabled={isLoading}>
+                                {isLoading ? <span className="loader"></span> : (
+                                    <>
+                                        {currState === "Login" ? "Sign In" : "Sign Up"}
+                                        <FaArrowRight className="btn-icon" />
+                                    </>
+                                )}
+                            </button>
+                        </form>
+
+                        <div className="divider">
+                            <span>Or continue with</span>
+                        </div>
+
+                        <div className="social-buttons">
+                            <button className="social-btn google" type="button">
+                                <FaGoogle /> <span>Google</span>
+                            </button>
+                            <button className="social-btn facebook" type="button">
+                                <FaFacebookF /> <span>Facebook</span>
+                            </button>
+                        </div>
+
+                        <div className="auth-switch">
+                            <p>
+                                {currState === "Login" ? "New here? " : "Already have an account? "}
+                                <span onClick={() => setCurrState(currState === "Login" ? "Sign Up" : "Login")}>
+                                    {currState === "Login" ? "Create Account" : "Login"}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div >
+        </div>
     );
 }
 

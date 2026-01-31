@@ -6,7 +6,7 @@
 
 const express = require('express');
 const multer = require('multer');
-const { addProduct, listProduct, removeProduct, bulkAddProduct } = require('../controllers/productController');
+const { addProduct, listProduct, removeProduct, bulkAddProduct, updateStock } = require('../controllers/productController');
 const productRouter = express.Router();
 
 //Image Storage Engine (Saving Image to uploads folder & rename it)
@@ -24,6 +24,7 @@ productRouter.get("/list", listProduct);
 productRouter.post("/add", upload.array('image', 4), addProduct); // Allow up to 4 images (1 main + 3 extra)
 productRouter.post("/bulk-add", upload.single('file'), bulkAddProduct);
 productRouter.post("/remove", removeProduct);
+productRouter.post("/update-stock", updateStock);
 
 // export default productRouter;
 

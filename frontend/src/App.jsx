@@ -18,18 +18,37 @@ import ProductDetails from './pages/ProductDetails/ProductDetails'
 import CategoryDetails from './pages/CategoryDetails/CategoryDetails'
 import ProductPopup from './components/ProductPopup/ProductPopup'
 import CategoryPopup from './components/CategoryPopup/CategoryPopup'
+import ProfileSettings from './pages/ProfileSettings/ProfileSettings'
+import HelpChatbot from './components/HelpChatbot/HelpChatbot'
+import SupportPopup from './components/SupportPopup/SupportPopup'
+
+import LatestProductsPopup from './components/LatestProductsPopup/LatestProductsPopup'
+import NotificationPopup from './components/NotificationPopup/NotificationPopup'
 
 const App = () => {
 
   const [showLogin,setShowLogin] = useState(false);
+  const [showSupport,setShowSupport] = useState(false);
+  const [showLatestProducts, setShowLatestProducts] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [latestPopupCategory, setLatestPopupCategory] = useState("All");
 
   return (
     <>
     <ToastContainer/>
     {showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>}
+    {showSupport?<SupportPopup setShowSupport={setShowSupport}/>:<></>}
+    {showLatestProducts?<LatestProductsPopup setShowLatestProducts={setShowLatestProducts} category={latestPopupCategory} />:<></>}
+    <NotificationPopup showNotifications={showNotifications} setShowNotifications={setShowNotifications} />
     <ProductPopup />
     <CategoryPopup />
-    <Navbar setShowLogin={setShowLogin}/>
+    <Navbar 
+      setShowLogin={setShowLogin} 
+      setShowSupport={setShowSupport} 
+      setShowLatestProducts={setShowLatestProducts}
+      setLatestPopupCategory={setLatestPopupCategory}
+      setShowNotifications={setShowNotifications}
+    />
       <div className='app'>
         {/* <Navbar setShowLogin={setShowLogin}/> */}
         <Routes>
@@ -45,9 +64,11 @@ const App = () => {
           <Route path='/confirm' element={<ConfirmationPage />} />
           <Route path='/product/:id' element={<ProductDetails />} />
           <Route path='/category/:categoryName' element={<CategoryDetails />} />
+          <Route path='/settings' element={<ProfileSettings setShowSupport={setShowSupport}/>} />
         </Routes>
       </div>
       <Footer />
+      <HelpChatbot />
     </>
   )
 }

@@ -3,9 +3,20 @@
 
 const express = require('express');
 const authMiddleware = require('../middleware/auth.js');
-const { loginUser, registerUser, getConfirmationToken, getUserActivity, logoutUser, removeUser, suspendUser, forceLogoutUser } = require('../controllers/userController.js');
+const { loginUser, registerUser, getConfirmationToken, getUserActivity, logoutUser, removeUser, suspendUser, forceLogoutUser, getUserProfile, updateUserProfile } = require('../controllers/userController.js');
 
 const userRouter = express.Router();
+const multer = require('multer');
+
+// Image Storage Engine
+const storage = multer.diskStorage({
+    destination: 'uploads',
+    filename: (req, file, cb) => {
+        return cb(null, `${Date.now()}${file.originalname}`);
+    }
+})
+
+const upload = multer({ storage: storage })
 
 userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
@@ -15,6 +26,8 @@ userRouter.get("/confirm/:token", getConfirmationToken);
 userRouter.post("/remove", removeUser);
 userRouter.post("/suspend", suspendUser);
 userRouter.post("/force-logout", forceLogoutUser);
+userRouter.get("/profile", authMiddleware, getUserProfile);
+userRouter.post("/update-profile", authMiddleware, upload.single('image'), updateUserProfile);
 
 
 

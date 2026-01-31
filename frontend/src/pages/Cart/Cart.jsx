@@ -44,7 +44,7 @@
 //           </div>
 //           <button onClick={()=>navigate('/order')}>PROCEED TO CHECKOUT</button>
 //         </div>
-        
+
 //       </div>
 //     </div>
 //   )
@@ -120,13 +120,18 @@ import React, { useContext } from 'react';
 import './Cart.css';
 import { StoreContext } from '../../Context/StoreContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
   const { cartItems, product_list, removeFromCart, getTotalCartAmount, updateCartItemQuantity, url } = useContext(StoreContext);
   const navigate = useNavigate();
 
   // Function to increase the quantity of a cart item
-  const increaseQuantity = (itemId) => {
+  const increaseQuantity = (itemId, stock) => {
+    if (cartItems[itemId] >= stock) {
+      toast.warning(`Only ${stock} items available in stock!`);
+      return;
+    }
     updateCartItemQuantity(itemId, cartItems[itemId] + 1);
   };
 
@@ -145,20 +150,36 @@ const Cart = () => {
         </div>
         {product_list.map((item, index) => {
           if (cartItems[item._id] > 0) {
+            const exceedsStock = cartItems[item._id] >= item.stock;
+            const isLowStock = item.stock <= 10 && item.stock > 0;
             return (
               <div key={index} className="cart-item-card">
                 <div className="cart-item-details">
                   <img src={url + "/images/" + item.image} alt={item.name} className="cart-item-image" />
-                  <p>{item.name}</p>
+                  <div className="cart-item-name">
+                    <p>{item.name}</p>
+                    {isLowStock && (
+                      <span className="cart-low-stock-tag">⚠️ Only {item.stock} left</span>
+                    )}
+                  </div>
                   <p>₹{item.price}</p>
                   <div className="cart-item-quantity">
-                    <button onClick={() => decreaseQuantity(item._id)} style={{marginRight:'5px', background:'black', color:'white'}}>-</button>
+                    <button onClick={() => decreaseQuantity(item._id)} className="qty-btn">-</button>
                     <span>{cartItems[item._id]}</span>
-                    <button onClick={() => increaseQuantity(item._id)} style={{marginLeft:'5px', background:'black', color:'white'}}>+</button>
+                    <button
+                      onClick={() => increaseQuantity(item._id, item.stock)}
+                      className={`qty-btn ${exceedsStock ? 'disabled' : ''}`}
+                      disabled={exceedsStock}
+                    >+</button>
                   </div>
                   <p>₹{item.price * cartItems[item._id]}</p>
                   <p className='cart-item-remove' onClick={() => removeFromCart(item._id)}>Remove</p>
                 </div>
+                {exceedsStock && (
+                  <div className="cart-stock-warning">
+                    ⚠️ You've reached the maximum available stock for this item
+                  </div>
+                )}
                 <hr />
               </div>
             );

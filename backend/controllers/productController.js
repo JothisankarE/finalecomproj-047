@@ -100,14 +100,24 @@ const removeProduct = async (req, res) => {
     }
 
 }
-
-
+// update Product Stock
+const updateStock = async (req, res) => {
+    try {
+        const { id, stock } = req.body;
+        await productModel.findByIdAndUpdate(id, { stock: parseInt(stock) });
+        res.json({ success: true, message: "Stock Updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
 
 module.exports = {
     listProduct,
     addProduct,
     removeProduct,
-    bulkAddProduct
+    bulkAddProduct,
+    updateStock
 }
 
 

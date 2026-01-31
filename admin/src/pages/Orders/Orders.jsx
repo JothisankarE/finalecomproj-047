@@ -77,6 +77,11 @@ const Order = () => {
                 <option value="Food Processing">Processing</option>
                 <option value="Out for delivery">On Delivery</option>
                 <option value="Delivered">Delivered</option>
+                <optgroup label="Cancellation">
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Cancelled - Out of Stock">Cancelled (Out of Stock)</option>
+                  <option value="Cancelled - Request Denied">Cancelled (Request Denied)</option>
+                </optgroup>
               </select>
             </div>
           </div>

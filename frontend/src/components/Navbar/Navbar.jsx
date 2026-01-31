@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import './Navbar.css'
 import { assets } from '../../assets/assets'
 import { Link, useNavigate } from 'react-router-dom'
@@ -6,10 +6,10 @@ import { StoreContext } from '../../Context/StoreContext'
 import cartImage from '../../../src/Assets1/basket.webp'
 import profileImage from '../../../src/Assets1/profile_1.jpg'
 
-const Navbar = ({ setShowLogin }) => {
+const Navbar = ({ setShowLogin, setShowSupport, setShowLatestProducts, setLatestPopupCategory, setShowNotifications }) => {
 
   const [menu, setMenu] = useState("home");
-  const { getTotalCartAmount, token ,setToken } = useContext(StoreContext);
+  const { getTotalCartAmount, token, setToken, userData, url, profileImagePreview, menu_list, product_list, setSelectedCategory } = useContext(StoreContext);
   const navigate = useNavigate();
 
   const logout = () => {
@@ -18,119 +18,135 @@ const Navbar = ({ setShowLogin }) => {
     navigate('/')
   }
 
-  return (
-    <div className='navbar' id='navbar'>
-      <h1>Gowri Handloom</h1>      
-      <ul className="navbar-menu">
-        <Link to="/" onClick={() => setMenu("home")} className={`${menu === "home" ? "active" : ""}`}>Home</Link>
-        <a href="/aboutus" onClick={() => setMenu("about")} className={`${menu === "about" ? "active" : ""}`}>About Us</a>
-        <a href='#explore-menu' onClick={() => setMenu("mob-app")} className={`${menu === "mob-app" ? "active" : ""}`}>Products</a> 
-        <a href='/contactus' onClick={() => setMenu("contact")} className={`${menu === "contact" ? "active" : ""}`}>Contact Us</a>
-      </ul>
-      <div className="navbar-right">
-        
-        <Link to='/cart' className='navbar-search-icon'>
-           <img style={{height:'30px', width:'30px'}} src={cartImage} alt="" />         
-          <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
-        </Link>
-        {!token ? <button onClick={() => setShowLogin(true)}>sign in</button>
-          : <div className='navbar-profile'>
-            <img style={{height:'30px', width:'30px'}} src={profileImage} alt="" />
-            <ul className='navbar-profile-dropdown'>
-              <li onClick={()=>navigate('/myorders')}> <img src={assets.bag_icon} alt="" /> <p>Orders</p></li>
-              <hr />
-              <li onClick={logout}> <img src={assets.logout_icon} alt="" /> <p>Logout</p></li> 
-            </ul>
-            
-          </div>
-        }       
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
+  };
 
+  const handleLatestCategoryClick = (category) => {
+    setLatestPopupCategory(category);
+    setShowLatestProducts(true);
+    setMenu("products");
+  };
+
+  return (
+    <nav className='navbar' id='navbar'>
+      {/* Logo Section */}
+      <div className="navbar-left">
+        <Link to="/" className="navbar-brand" onClick={() => setMenu("home")}>
+          <img src={assets.mat_logo} alt="MAT Logo" className="navbar-logo" />
+        </Link>
+        {token && userData.name && (
+          <div className="navbar-greeting">
+            <span className="greeting-text">{getGreeting()}, <b>{userData.name.split(' ')[0]}!</b></span>
+          </div>
+        )}
       </div>
-    </div>
+
+      {/* Navigation Menu */}
+      <ul className="navbar-menu">
+        <li>
+          <Link to="/" onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>
+            Home
+          </Link>
+        </li>
+        <li>
+          <a href="/aboutus" onClick={() => setMenu("about")} className={menu === "about" ? "active" : ""}>
+            About Us
+          </a>
+        </li>
+        <li className="navbar-item-dropdown" onMouseEnter={() => setMenu("products")}>
+          <div
+            className={`navbar-link ${menu === "products" ? "active" : ""}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleLatestCategoryClick("All");
+            }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', padding: '10px 20px', fontSize: '15px', fontWeight: '500', color: '#4a5568' }}
+          >
+            Products <span style={{ fontSize: '10px' }}>▼</span>
+          </div>
+          <div className="dropdown-menu">
+            <div className="dropdown-grid">
+              <div
+                className="dropdown-category-item"
+                onClick={() => handleLatestCategoryClick("All")}
+              >
+                <div className="category-info">
+                  <span className="category-name">All Products</span>
+                </div>
+                <span className="category-count">{product_list.length}</span>
+              </div>
+
+              {menu_list.map((item, index) => {
+                const count = product_list.filter(p => p.category === item.menu_name).length;
+                if (count === 0) return null; // Optional: hide empty categories
+                return (
+                  <div
+                    key={index}
+                    className="dropdown-category-item"
+                    onClick={() => handleLatestCategoryClick(item.menu_name)}
+                  >
+                    <div className="category-info">
+                      <img src={item.menu_image} alt={item.menu_name} className="category-img" />
+                      <span className="category-name">{item.menu_name}</span>
+                    </div>
+                    <span className="category-count">{count}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </li>
+        <li>
+          <a href='#contactus' onClick={() => setMenu("contact")} className={menu === "contact" ? "active" : ""}>
+            Contact Us
+          </a>
+        </li>
+
+      </ul>
+
+      {/* Right Section */}
+      <div className="navbar-right">
+        {/* Cart Icon */}
+        <Link to='/cart' className='navbar-cart'>
+          <img src={cartImage} alt="Cart" />
+          {getTotalCartAmount() > 0 && <span className="cart-badge"></span>}
+        </Link>
+
+        {/* Auth Section */}
+        {!token ? (
+          <button className="signin-btn" onClick={() => setShowLogin(true)}>
+            Sign In
+          </button>
+        ) : (
+          <div className='navbar-profile'>
+            <img src={profileImagePreview ? profileImagePreview : (userData.image ? `${url}/images/${userData.image}` : profileImage)} alt="Profile" className="profile-img" />
+            <ul className='navbar-profile-dropdown'>
+              <li onClick={() => navigate('/settings')}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Settings</span>
+              </li>
+              <li onClick={() => setShowNotifications(true)}>
+                <img src={assets.bag_icon} style={{ filter: 'grayscale(100%)', opacity: 0.6 }} alt="" />
+                <span>Notifications</span>
+              </li>
+              <li onClick={() => navigate('/myorders')}>
+                <img src={assets.bag_icon} alt="" />
+                <span>My Orders</span>
+              </li>
+              <li onClick={logout} className="logout-item">
+                <img src={assets.logout_icon} alt="" />
+                <span>Logout</span>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </nav>
   )
 }
 
 export default Navbar
-
-
-
-// import React, { useState } from "react";
-// import { Link as ScrollLink } from "react-scroll"; // Import from react-scroll
-// import cartImage from "../../../src/Assets1/basket_icon1.webp";
-// import profileImage from "../../../src/Assets1/profile.png";
-// import './Navbar.css';
-
-// const Navbar = ({ setShowLogin }) => {
-//   const [menu, setMenu] = useState("home");
-
-//   return (
-//     <div className="navbar" id="navbar">
-//       <h1>Gowri Handloom</h1>
-//       <ul className="navbar-menu">
-//         <ScrollLink
-//           to="home"
-//           smooth={true}
-//           duration={500}
-//           onClick={() => setMenu("home")}
-//           className={`${menu === "home" ? "active" : ""}`}
-//         >
-//           Home
-//         </ScrollLink>
-//         <ScrollLink
-//           to="about-us"
-//           smooth={true}
-//           duration={500}
-//           onClick={() => setMenu("about")}
-//           className={`${menu === "about" ? "active" : ""}`}
-//         >
-//           About Us
-//         </ScrollLink>
-//         <ScrollLink
-//           to="products"
-//           smooth={true}
-//           duration={500}
-//           onClick={() => setMenu("mob-app")}
-//           className={`${menu === "mob-app" ? "active" : ""}`}
-//         >
-//           Products
-//         </ScrollLink>
-//         <ScrollLink
-//           to="contact-us"
-//           smooth={true}
-//           duration={500}
-//           onClick={() => setMenu("contact")}
-//           className={`${menu === "contact" ? "active" : ""}`}
-//         >
-//           Contact Us
-//         </ScrollLink>
-//       </ul>
-      
-//       <div className="navbar-right">
-//         <a href="/cart" className="navbar-search-icon">
-//           <img style={{ height: "30px", width: "30px" }} src={cartImage} alt="" />
-//         </a>
-        
-//         {!token ? (
-//           <button onClick={() => setShowLogin(true)}>Sign In</button>
-//         ) : (
-//           <div className="navbar-profile">
-//             <img style={{ height: "30px", width: "30px" }} src={profileImage} alt="" />
-//             <ul className="navbar-profile-dropdown">
-//               <li onClick={() => navigate("/myorders")}>
-//                 <p>Orders</p>
-//               </li>
-//               <hr />
-//               <li onClick={logout}>
-//                 <p>Logout</p>
-//               </li>
-//             </ul>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
-
-

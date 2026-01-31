@@ -5,27 +5,29 @@ import './Aboutus.css';
 const AboutUs = () => {
   return (
     <div className="about-us">
-      
+
       <header className="about-header">
         <div className="row">
-         
+
           <div className="text">
-            <h2>Welcome To Gowri Handlooms Pvt Ltd.!</h2>
+            <h2>Welcome To Kathithimalai Textile.!</h2>
             <h3><b>About Us</b></h3>
             <p>
-            Gowri Handlooms Pvt Ltd is established in the year 1994 by a visionary entrepreneur Name of the Owner in Erode (South India).
-              With very limited resources and little financial leverage, we initially began our company with a limited selection of lungies.
-              Now, we are one of South India's leading textile manufacturers, offering a wide variety of products, including Bed Spreads, Pillow Covers, Bed Covers, Dhotis, Handkerchiefs, and more.
+              Kathithimalai Textile is a registered proprietorship firm engaged in the textile business, operating actively with a REGULAR GST registration. The firm is committed to delivering quality textile products that meet both market standards and customer expectations.
+
+Registered and operating from Erode, Tamil Nadu, Kathithimalai Textile focuses on dependable manufacturing and trading practices, serving customers with consistency, integrity, and attention to detail. Our principal place of business is located at the same registered address, ensuring streamlined operations and transparency.
+
+With a strong foundation in the textile sector, we continue to grow by maintaining quality, reliability, and customer satisfaction at the core of our business.                                                      If you have any questions or would like to know more about our products and services, feel free to get in touch with us.                
             </p>
             <p>We are proud to serve both local and international markets with high-quality textiles.</p>
           </div>
         </div>
       </header>
 
-      
+
       <section className="about-mission">
         <div className="row">
-          
+
           <div className="text">
             <h1 className="color">Our Mission</h1>
             <p>
@@ -36,10 +38,10 @@ const AboutUs = () => {
         </div>
       </section>
 
-     
+
       <section className="about-quality">
         <div className="row">
-          
+
           <div className="text">
             <h1 className="color">Quality Assurance</h1>
             <p>
@@ -49,27 +51,29 @@ const AboutUs = () => {
         </div>
       </section>
 
-   
+
       <section className="about-team">
         <div className="row">
-          
+
           <div className="text">
             <h1 className="color">Our Team</h1>
             <p>
-              We have a highly qualified and dedicated team of professionals who are in tune with the latest market trends. With years of experience, our team helps us maintain strong relationships with customers and continuously improve our marketing strategies. We believe our team is one of the most innovative and talented in the industry.
+              We have a highly qualified and dedicated team of professionals who are in tune with the latest market trends. 
+              With years of experience, our team helps us maintain strong relationships with customers and continuously improve our marketing strategies.
+              We believe our team is one of the most innovative and talented in the industry.
             </p>
           </div>
         </div>
       </section>
-    <br/><br/>
-      
+      <br /><br />
+
       <section className="about-contact">
         <h2>Contact Us</h2>
-        <p>If you have any questions or want to know more about our products, feel free to reach out to us!</p><br/><br/>
+        <p>If you have any questions or want to know more about our products, feel free to reach out to us!</p><br /><br />
         <ul>
-          <li><strong>Address:</strong>Test, Erode, Tamil Nadu- 638001</li>
-          <li><strong>Phone:</strong> +91123456789</li>
-          <li><strong>Email:</strong> gowrihandlooms@gmail.com</li>
+          <li><strong>Address:</strong>4/586, Uthukuli Road,Vijayamangalam, Perundurai,Erode,Tamil Nadu – 638056</li>
+          <li><strong>Phone:</strong> +985599000000</li>
+          <li><strong>Email:</strong> kathithimalaitextile@gmail.com</li>
         </ul>
       </section>
     </div>

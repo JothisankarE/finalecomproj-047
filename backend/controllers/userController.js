@@ -185,6 +185,44 @@ const suspendUser = async (req, res) => {
     }
 }
 
+const getUserProfile = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.body.userId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        const { name, email, address, theme, image } = user;
+        res.json({ success: true, data: { name, email, address, theme, image } });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error fetching profile" });
+    }
+}
+
+const updateUserProfile = async (req, res) => {
+    try {
+        const { name, address, theme } = req.body;
+        let updateData = {};
+
+        if (name !== undefined) updateData.name = name;
+        if (address !== undefined) updateData.address = address;
+        if (theme !== undefined) updateData.theme = theme;
+
+        if (req.file) {
+            updateData.image = req.file.filename;
+        }
+
+        // Use req.userId set by authMiddleware, or fallback to req.body.userId
+        const userId = req.userId || req.body.userId;
+
+        await userModel.findByIdAndUpdate(userId, updateData);
+        res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error updating profile" });
+    }
+}
+
 const forceLogoutUser = async (req, res) => {
     try {
         await userModel.findByIdAndUpdate(req.body.id, { lastLogout: new Date() });
@@ -204,5 +242,7 @@ module.exports = {
     logoutUser,
     removeUser,
     suspendUser,
-    forceLogoutUser
+    forceLogoutUser,
+    getUserProfile,
+    updateUserProfile
 }
