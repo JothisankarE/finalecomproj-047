@@ -107,6 +107,71 @@
     font-weight: 800;
     color: var(--primary);
     font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.price-text.clickable {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.price-text.clickable:hover {
+    background: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+/* Price Edit Container */
+.price-edit-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--primary-light);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.price-input {
+    width: 80px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+    outline: none;
+    text-align: center;
+}
+
+.price-action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+.price-action-btn.save {
+    background: #10b981;
+    color: white;
+}
+
+.price-action-btn.cancel {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.price-action-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
 }
 
 .stock-badge {

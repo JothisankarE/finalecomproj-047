@@ -29,6 +29,8 @@ const Order = () => {
     }
   };
 
+
+
   useEffect(() => {
     fetchAllOrders();
 
@@ -67,22 +69,28 @@ const Order = () => {
             </div>
 
             <div className="order-item-footer">
-              <span className="order-price">₹{order.amount}</span>
-              <span style={{ fontSize: '0.9rem', color: '#666' }}>{order.items.length} Items</span>
-              <select
-                onChange={(e) => statusHandler(e, order._id)}
-                value={order.status}
-                className="order-status-select"
-              >
-                <option value="Food Processing">Processing</option>
-                <option value="Out for delivery">On Delivery</option>
-                <option value="Delivered">Delivered</option>
-                <optgroup label="Cancellation">
-                  <option value="Cancelled">Cancelled</option>
-                  <option value="Cancelled - Out of Stock">Cancelled (Out of Stock)</option>
-                  <option value="Cancelled - Request Denied">Cancelled (Request Denied)</option>
-                </optgroup>
-              </select>
+              <div className="order-actions-container">
+                <span className="order-price">₹{order.amount}</span>
+                <span style={{ fontSize: '0.9rem', color: '#666' }}>{order.items.length} Items</span>
+              </div>
+
+              <div className="order-status-wrapper">
+                <label className="status-label">Order Status</label>
+                <select
+                  onChange={(e) => statusHandler(e, order._id)}
+                  value={order.status}
+                  className={`order-status-select ${order.status.replace(/\s+/g, '-').toLowerCase()}`}
+                >
+                  <option value="Food Processing">Processing</option>
+                  <option value="Out for delivery">On Delivery</option>
+                  <option value="Delivered">Delivered</option>
+                  <optgroup label="Cancellation">
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Cancelled - Out of Stock">Cancelled (Stock Out)</option>
+                    <option value="Cancelled - Request Denied">Cancelled (Denied)</option>
+                  </optgroup>
+                </select>
+              </div>
             </div>
           </div>
         ))}

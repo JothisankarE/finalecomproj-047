@@ -224,11 +224,73 @@ const getDashboardStats = async (req, res) => {
 
 
 
+const generateInvoice = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    const order = await orderModel.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    const PDFDocument = require('pdfkit');
+    const doc = new PDFDocument({ margin: 50 });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=invoice-${orderId}.pdf`);
+
+    doc.pipe(res);
+
+    // Header
+    doc.fontSize(20).text('INVOICE', { align: 'center' });
+    doc.moveDown();
+
+    // Order Details
+    doc.fontSize(12).text(`Order ID: ${order._id}`);
+    doc.text(`Date: ${new Date(order.date).toLocaleDateString()}`);
+    doc.text(`Customer: ${order.address.firstName} ${order.address.lastName}`);
+    doc.text(`Email: ${order.address.email}`);
+    doc.moveDown();
+
+    // Items
+    const startX = 50;
+    let currentY = doc.y;
+
+    doc.font('Helvetica-Bold');
+    doc.text('Item', startX, currentY);
+    doc.text('Qty', startX + 200, currentY);
+    doc.text('Price', startX + 300, currentY);
+    doc.text('Total', startX + 400, currentY);
+    doc.moveDown();
+
+    doc.font('Helvetica');
+    order.items.forEach(item => {
+      currentY = doc.y;
+      doc.text(item.name.substring(0, 30), startX, currentY);
+      doc.text(item.quantity.toString(), startX + 200, currentY);
+      doc.text(`Rs.${item.price}`, startX + 300, currentY);
+      doc.text(`Rs.${item.price * item.quantity}`, startX + 400, currentY);
+      doc.moveDown();
+    });
+
+    doc.moveDown();
+    doc.font('Helvetica-Bold');
+    doc.text(`Grand Total: Rs.${order.amount}`, { align: 'right' });
+
+    doc.end();
+
+  } catch (error) {
+    console.log("Error generating invoice:", error);
+    res.status(500).json({ success: false, message: "Error generating invoice" });
+  }
+}
+
 module.exports = {
   placeOrder,
   listOrders,
   userOrders,
   updateStatus,
   verifyOrder,
-  getDashboardStats
+  getDashboardStats,
+  generateInvoice
 };

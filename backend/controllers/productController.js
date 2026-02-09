@@ -54,22 +54,31 @@ const bulkAddProduct = async (req, res) => {
         const workbook = xlsx.readFile(req.file.path);
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-        const data = xlsx.utils.sheet_to_json(sheet);
+        let data = xlsx.utils.sheet_to_json(sheet);
 
-        // Iterate and save
-        // Expected columns: Name, Description, Price, Category, Stock, Image (filename if pre-uploaded or URL)
-        // Note: Handling images in bulk via Excel is complex. We assume 'Image' column has a valid filename or URL.
-        // For simplicity in this demo, we might set a default image if missing or just trust the filename.
+        // Normalize keys and filter valid products
+        const products = data.map(item => {
+            const newItem = {};
+            // Convert keys to lower case for easier access if mismatched
+            Object.keys(item).forEach(key => {
+                newItem[key.toLowerCase()] = item[key];
+            });
+            // Also keep original just in case, but prioritize our normalized keys below
 
-        const products = data.map(item => ({
-            name: item.Name,
-            description: item.Description,
-            price: item.Price,
-            category: item.Category,
-            stock: item.Stock || 0,
-            image: item.Image || "default_product.png", // Fallback
-            extraImages: []
-        }));
+            return {
+                name: newItem['name'] || item['Name'],
+                description: newItem['description'] || item['Description'],
+                price: newItem['price'] || item['Price'],
+                category: newItem['category'] || item['Category'],
+                stock: newItem['stock'] || item['Stock'] || 0,
+                image: newItem['image'] || item['Image'] || "default_product.png",
+                extraImages: []
+            };
+        }).filter(p => p.name && p.price && p.category);
+
+        if (products.length === 0) {
+            return res.json({ success: false, message: "No valid products found check headers (Name, Price, Category)" });
+        }
 
         await productModel.insertMany(products);
 
@@ -80,7 +89,10 @@ const bulkAddProduct = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error processing file" });
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlink(req.file.path, () => { });
+        }
+        res.json({ success: false, message: "Error processing file: " + error.message });
     }
 }
 
@@ -104,8 +116,20 @@ const removeProduct = async (req, res) => {
 const updateStock = async (req, res) => {
     try {
         const { id, stock } = req.body;
-        await productModel.findByIdAndUpdate(id, { stock: parseInt(stock) });
+        await productModel.findByIdAndUpdate(id, { stock: Number(stock) });
         res.json({ success: true, message: "Stock Updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+// update Product Price
+const updatePrice = async (req, res) => {
+    try {
+        const { id, price } = req.body;
+        await productModel.findByIdAndUpdate(id, { price: Number(price) });
+        res.json({ success: true, message: "Price Updated" });
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error" });
@@ -117,8 +141,6 @@ module.exports = {
     addProduct,
     removeProduct,
     bulkAddProduct,
-    updateStock
+    updateStock,
+    updatePrice
 }
-
-
-

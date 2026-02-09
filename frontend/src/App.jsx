@@ -24,6 +24,8 @@ import SupportPopup from './components/SupportPopup/SupportPopup'
 
 import LatestProductsPopup from './components/LatestProductsPopup/LatestProductsPopup'
 import NotificationPopup from './components/NotificationPopup/NotificationPopup'
+import LatestProducts from './pages/LatestProducts/LatestProducts'
+import SaleBannerPopup from './components/SaleBannerPopup/SaleBannerPopup'
 
 const App = () => {
 
@@ -38,9 +40,10 @@ const App = () => {
     <ToastContainer/>
     {showLogin?<LoginPopup setShowLogin={setShowLogin}/>:<></>}
     {showSupport?<SupportPopup setShowSupport={setShowSupport}/>:<></>}
-    {showLatestProducts?<LatestProductsPopup setShowLatestProducts={setShowLatestProducts} category={latestPopupCategory} />:<></>}
+    {showLatestProducts?<LatestProductsPopup setShowLatestProducts={setShowLatestProducts} category={latestPopupCategory} setCategory={setLatestPopupCategory} />:<></>}
     <NotificationPopup showNotifications={showNotifications} setShowNotifications={setShowNotifications} />
     <ProductPopup />
+    <SaleBannerPopup />
     <CategoryPopup />
     <Navbar 
       setShowLogin={setShowLogin} 
@@ -65,6 +68,7 @@ const App = () => {
           <Route path='/product/:id' element={<ProductDetails />} />
           <Route path='/category/:categoryName' element={<CategoryDetails />} />
           <Route path='/settings' element={<ProfileSettings setShowSupport={setShowSupport}/>} />
+          <Route path='/latest-products' element={<LatestProducts />} />
         </Routes>
       </div>
       <Footer />

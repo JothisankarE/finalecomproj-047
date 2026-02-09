@@ -4,7 +4,7 @@
 
 const express = require('express');
 const authMiddleware = require('../middleware/auth.js');
-const { listOrders, placeOrder, updateStatus, userOrders, verifyOrder, getDashboardStats } = require('../controllers/orderController.js');
+const { listOrders, placeOrder, updateStatus, userOrders, verifyOrder, getDashboardStats, generateInvoice } = require('../controllers/orderController.js');
 
 const orderRouter = express.Router();
 
@@ -14,6 +14,7 @@ orderRouter.post("/userorders", authMiddleware, userOrders);
 orderRouter.post("/place", authMiddleware, placeOrder);
 orderRouter.post("/status", updateStatus);
 orderRouter.post("/verify", verifyOrder);
+orderRouter.post("/receipt", generateInvoice);
 
 // export default orderRouter;
 

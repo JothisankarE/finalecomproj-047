@@ -88,168 +88,142 @@ const LoginPopup = ({ setShowLogin }) => {
 
     return (
         <div className='login-popup-overlay' onClick={(e) => e.target.className === 'login-popup-overlay' && setShowLogin(false)}>
-            <div className={`login-popup-container ${currState === "Sign Up" ? "sign-up-mode" : ""}`}>
-                
+            <div className="login-popup-container">
+
                 {/* Close Button */}
                 <button className="popup-close-btn" onClick={() => setShowLogin(false)}>
                     <FaTimes />
                 </button>
 
-                {/* Left Panel - Branding & Info */}
-                <div className="login-panel left-panel">
-                    <div className="panel-content">
-                        <div className="brand-header">
-                            <span className="brand-icon">🧵</span>
-                            <span className="brand-name">Handloom</span>
-                        </div>
-                        <div className="panel-text">
-                            <h1>{currState === "Login" ? "Welcome Back!" : "Join Us!"}</h1>
-                            <p>
-                                {currState === "Login" 
-                                    ? "Access your orders, wishlist, and recommendations." 
-                                    : "Create an account to unlock exclusive offers and faster checkout."}
-                            </p>
-                        </div>
-                        <div className="panel-features">
-                            <div className="p-feature"><span>✨</span> Premium Quality</div>
-                            <div className="p-feature"><span>🚚</span> Fast Delivery</div>
-                            <div className="p-feature"><span>🛡️</span> Secure Payment</div>
-                        </div>
+                {/* Form Section */}
+                <div className="login-box">
+                    <div className="form-header">
+                        <h2>{currState === "Login" ? "Welcome Back" : "Create Account"}</h2>
+                        <p className="subtitle">
+                            {currState === "Login" ? "Enter your details to sign in" : "Sign up and get started today"}
+                        </p>
                     </div>
-                    <div className="panel-decoration"></div>
-                </div>
 
-                {/* Right Panel - Form */}
-                <div className="login-panel right-panel">
-                    <div className="form-container">
-                        <div className="form-header">
-                            <h2>{currState === "Login" ? "Sign In" : "Create Account"}</h2>
-                            <p className="subtitle">
-                                {currState === "Login" ? "Please login to continue" : "Get started with your free account"}
-                            </p>
-                        </div>
-
-                        <form onSubmit={onLogin} className="auth-form">
-                            {currState === "Sign Up" && (
-                                <div className="form-group">
-                                    <div className="input-wrapper">
-                                        <FaUser className="field-icon" />
-                                        <input
-                                            type="text"
-                                            name='name'
-                                            placeholder='Full Name'
-                                            value={data.name}
-                                            onChange={onChangeHandler}
-                                            required
-                                        />
-                                    </div>
-                                    {errorMessage && <span className="field-error">{errorMessage}</span>}
-                                </div>
-                            )}
-
+                    <form onSubmit={onLogin} className="auth-form">
+                        {currState === "Sign Up" && (
                             <div className="form-group">
                                 <div className="input-wrapper">
-                                    <FaEnvelope className="field-icon" />
+                                    <FaUser className="field-icon" />
                                     <input
-                                        type="email"
-                                        name='email'
-                                        placeholder='Email Address'
-                                        value={data.email}
+                                        type="text"
+                                        name='name'
+                                        placeholder='Full Name'
+                                        value={data.name}
                                         onChange={onChangeHandler}
                                         required
                                     />
                                 </div>
+                                {errorMessage && <span className="field-error">{errorMessage}</span>}
                             </div>
+                        )}
 
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaEnvelope className="field-icon" />
+                                <input
+                                    type="email"
+                                    name='email'
+                                    placeholder='Email Address'
+                                    value={data.email}
+                                    onChange={onChangeHandler}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaLock className="field-icon" />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name='password'
+                                    placeholder='Password'
+                                    value={data.password}
+                                    onChange={onChangeHandler}
+                                    required
+                                />
+                                <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {currState === "Sign Up" && (
                             <div className="form-group">
                                 <div className="input-wrapper">
                                     <FaLock className="field-icon" />
                                     <input
-                                        type={showPassword ? "text" : "password"}
-                                        name='password'
-                                        placeholder='Password'
-                                        value={data.password}
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        name='confirmPassword'
+                                        placeholder='Confirm Password'
+                                        value={data.confirmPassword}
                                         onChange={onChangeHandler}
                                         required
                                     />
-                                    <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                                     </button>
                                 </div>
+                                {passwordError && <span className="field-error">{passwordError}</span>}
                             </div>
+                        )}
 
-                            {currState === "Sign Up" && (
-                                <div className="form-group">
-                                    <div className="input-wrapper">
-                                        <FaLock className="field-icon" />
-                                        <input
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            name='confirmPassword'
-                                            placeholder='Confirm Password'
-                                            value={data.confirmPassword}
-                                            onChange={onChangeHandler}
-                                            required
-                                        />
-                                        <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                                        </button>
-                                    </div>
-                                    {passwordError && <span className="field-error">{passwordError}</span>}
-                                </div>
+                        {currState === "Login" && (
+                            <div className="form-extras">
+                                <label className="remember-me">
+                                    <input type="checkbox" />
+                                    <span className="custom-checkbox"></span>
+                                    <span>Remember me</span>
+                                </label>
+                                <a href="#" className="forgot-link">Forgot Password?</a>
+                            </div>
+                        )}
+
+                        {currState === "Sign Up" && (
+                            <div className="form-extras">
+                                <label className="remember-me text-sm">
+                                    <input type="checkbox" required />
+                                    <span className="custom-checkbox"></span>
+                                    <span>I agree to Terms & Privacy</span>
+                                </label>
+                            </div>
+                        )}
+
+                        <button type="submit" className="submit-btn" disabled={isLoading}>
+                            {isLoading ? <span className="loader"></span> : (
+                                <>
+                                    {currState === "Login" ? "Sign In" : "Sign Up"}
+                                    <FaArrowRight className="btn-icon" />
+                                </>
                             )}
+                        </button>
+                    </form>
 
-                            {currState === "Login" && (
-                                <div className="form-extras">
-                                    <label className="remember-me">
-                                        <input type="checkbox" />
-                                        <span className="custom-checkbox"></span>
-                                        <span>Remember me</span>
-                                    </label>
-                                    <a href="#" className="forgot-link">Forgot Password?</a>
-                                </div>
-                            )}
+                    <div className="divider">
+                        <span>Or continue with</span>
+                    </div>
 
-                             {currState === "Sign Up" && (
-                                <div className="form-extras">
-                                     <label className="remember-me text-sm">
-                                        <input type="checkbox" required />
-                                        <span className="custom-checkbox"></span>
-                                        <span>I agree to Terms & Privacy</span>
-                                    </label>
-                                </div>
-                            )}
+                    <div className="social-buttons">
+                        <button className="social-btn google" type="button">
+                            <FaGoogle /> <span>Google</span>
+                        </button>
+                        <button className="social-btn facebook" type="button">
+                            <FaFacebookF /> <span>Facebook</span>
+                        </button>
+                    </div>
 
-                            <button type="submit" className="submit-btn" disabled={isLoading}>
-                                {isLoading ? <span className="loader"></span> : (
-                                    <>
-                                        {currState === "Login" ? "Sign In" : "Sign Up"}
-                                        <FaArrowRight className="btn-icon" />
-                                    </>
-                                )}
-                            </button>
-                        </form>
-
-                        <div className="divider">
-                            <span>Or continue with</span>
-                        </div>
-
-                        <div className="social-buttons">
-                            <button className="social-btn google" type="button">
-                                <FaGoogle /> <span>Google</span>
-                            </button>
-                            <button className="social-btn facebook" type="button">
-                                <FaFacebookF /> <span>Facebook</span>
-                            </button>
-                        </div>
-
-                        <div className="auth-switch">
-                            <p>
-                                {currState === "Login" ? "New here? " : "Already have an account? "}
-                                <span onClick={() => setCurrState(currState === "Login" ? "Sign Up" : "Login")}>
-                                    {currState === "Login" ? "Create Account" : "Login"}
-                                </span>
-                            </p>
-                        </div>
+                    <div className="auth-switch">
+                        <p>
+                            {currState === "Login" ? "New here? " : "Already have an account? "}
+                            <span onClick={() => setCurrState(currState === "Login" ? "Sign Up" : "Login")}>
+                                {currState === "Login" ? "Create Account" : "Login"}
+                            </span>
+                        </p>
                     </div>
                 </div>
             </div>

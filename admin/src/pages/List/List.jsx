@@ -9,6 +9,8 @@ const List = () => {
   const [list, setList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editStock, setEditStock] = useState("");
+  const [editingPriceId, setEditingPriceId] = useState(null);
+  const [editPrice, setEditPrice] = useState("");
 
   const fetchList = async () => {
     const response = await axios.get(`${url}/api/food/list`)
@@ -30,6 +32,24 @@ const List = () => {
     }
     else {
       toast.error("Error")
+    }
+  }
+
+  const updatePriceValue = async (id) => {
+    try {
+      const response = await axios.post(`${url}/api/food/update-price`, {
+        id: id,
+        price: editPrice
+      })
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setEditingPriceId(null);
+        await fetchList();
+      } else {
+        toast.error("Error updating price");
+      }
+    } catch (error) {
+      toast.error("Network Error");
     }
   }
 
@@ -83,7 +103,6 @@ const List = () => {
 
               <div className="product-info-cell">
                 <p className="product-name">{item.name}</p>
-                {/* <p className="product-desc">{item.description.substring(0, 30)}...</p> */}
               </div>
 
               <div className="category-cell">
@@ -91,7 +110,30 @@ const List = () => {
               </div>
 
               <div className="price-cell">
-                <p className="price-text">₹{item.price}</p>
+                {editingPriceId === item._id ? (
+                  <div className="price-edit-container">
+                    <input
+                      type="number"
+                      className="price-input"
+                      value={editPrice}
+                      onChange={(e) => setEditPrice(e.target.value)}
+                      autoFocus
+                    />
+                    <button className="price-action-btn save" onClick={() => updatePriceValue(item._id)}>✓</button>
+                    <button className="price-action-btn cancel" onClick={() => setEditingPriceId(null)}>✕</button>
+                  </div>
+                ) : (
+                  <p
+                    className="price-text clickable"
+                    onClick={() => {
+                      setEditingPriceId(item._id);
+                      setEditPrice(item.price);
+                    }}
+                    title="Click to edit price"
+                  >
+                    ₹{item.price}
+                  </p>
+                )}
               </div>
 
               <div className="stock-cell">

@@ -27,6 +27,7 @@ const ProductPopup = () => {
         }
         await addToCart(selectedProduct._id || selectedProduct.id);
         setSelectedProduct(null);
+        navigate('/cart');
     }
 
     return (
