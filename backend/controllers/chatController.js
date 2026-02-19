@@ -1,23 +1,20 @@
 const chatModel = require("../models/chatModel.js");
 const userModel = require("../models/userModel.js");
+const { sendContactFormEmail } = require("../utlis/sendEmail.js");
 
 // Save a new message or update existing chat
 const saveMessage = async (req, res) => {
-    const { userId, text, sender, userName, orderId, issueType } = req.body;
+    const { userId, text, sender, userName, orderId, issueType, firstName, lastName, email, phone, countryCode, services, rating } = req.body;
 
     try {
         // specific logic: Find an active (pending) chat for this user, or create a new one
-        // For simplicity in this helpdesk context, we might group by user or create a new session.
-        // Let's assume one active "Help" thread per user for simplicity, or just append to the latest one.
-
-        // Find the most recent chat for this user
         let chat = await chatModel.findOne({ userId: userId }).sort({ createdAt: -1 });
 
         // If no chat exists or the last one is resolved, create a new one
         if (!chat || chat.status === 'Resolved') {
             chat = new chatModel({
                 userId: userId,
-                userName: userName || "User",
+                userName: userName || `${firstName} ${lastName}` || "User",
                 messages: [],
                 status: 'Pending'
             });
@@ -33,8 +30,28 @@ const saveMessage = async (req, res) => {
         if (issueType) chat.issueType = issueType;
 
         chat.lastUpdated = Date.now();
-
         await chat.save();
+
+        // If this is a direct contact form submission (has firstName/email), send email notification
+        if (firstName && email) {
+            try {
+                await sendContactFormEmail({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    countryCode,
+                    services,
+                    message: text,
+                    rating
+                });
+                console.log("Contact form email sent successfully");
+            } catch (mailError) {
+                console.log("Failed to send contact form email:", mailError);
+                // We don't fail the response if email fails, but it's logged
+            }
+        }
+
         res.json({ success: true, message: "Message saved", chatId: chat._id });
 
     } catch (error) {

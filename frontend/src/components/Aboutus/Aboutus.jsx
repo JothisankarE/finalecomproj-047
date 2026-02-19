@@ -73,7 +73,7 @@ With a strong foundation in the textile sector, we continue to grow by maintaini
         <ul>
           <li><strong>Address:</strong>4/586, Uthukuli Road,Vijayamangalam, Perundurai,Erode,Tamil Nadu – 638056</li>
           <li><strong>Phone:</strong> +985599000000</li>
-          <li><strong>Email:</strong> kathithimalaitextile@gmail.com</li>
+          <li><strong>Email:</strong> jothisankar979@gmail.com</li>
         </ul>
       </section>
     </div>

@@ -181,7 +181,7 @@
 
 .activity-header {
   display: grid;
-  grid-template-columns: 1.5fr 1.5fr 1fr;
+  grid-template-columns: 1.5fr 1.5fr 1fr 0.4fr;
   padding: 20px 24px;
   background: #f0f9ff;
   /* Mild light blue tint */
@@ -195,7 +195,7 @@
 
 .activity-row {
   display: grid;
-  grid-template-columns: 1.5fr 1.5fr 1fr;
+  grid-template-columns: 1.5fr 1.5fr 1fr 0.4fr;
   padding: 18px 24px;
   border-bottom: 1px solid var(--border-solid);
   align-items: center;
@@ -259,6 +259,27 @@
   padding: 60px;
   text-align: center;
   color: var(--text-muted);
+}
+
+.user-remove-btn {
+  background: #fff1f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-remove-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 }
 
 /* Animations */

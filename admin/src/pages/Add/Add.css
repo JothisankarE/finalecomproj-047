@@ -399,3 +399,45 @@
         width: 100%;
     }
 }
+
+/* Pricing Summary Styles */
+.pricing-summary {
+    margin-top: 32px;
+    padding: 24px;
+    background: #f8fafc;
+    border-radius: 20px;
+    border: 1px solid var(--border-solid);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.summary-row.total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px dashed #cbd5e1;
+    color: var(--text-main);
+}
+
+.summary-row span:last-child {
+    font-weight: 700;
+}
+
+.final-price {
+    font-size: 1.5rem;
+    color: var(--primary) !important;
+    font-weight: 900 !important;
+}
+
+.summary-note {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 16px;
+    font-style: italic;
+}

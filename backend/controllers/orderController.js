@@ -234,6 +234,8 @@ const generateInvoice = async (req, res) => {
     }
 
     const PDFDocument = require('pdfkit');
+    const path = require('path');
+    const fs = require('fs');
     const doc = new PDFDocument({ margin: 50 });
 
     res.setHeader('Content-Type', 'application/pdf');
@@ -241,41 +243,139 @@ const generateInvoice = async (req, res) => {
 
     doc.pipe(res);
 
-    // Header
-    doc.fontSize(20).text('INVOICE', { align: 'center' });
-    doc.moveDown();
+    const logoPath = path.join(__dirname, '../../frontend/src/assets/mat_logo.png');
 
-    // Order Details
-    doc.fontSize(12).text(`Order ID: ${order._id}`);
-    doc.text(`Date: ${new Date(order.date).toLocaleDateString()}`);
-    doc.text(`Customer: ${order.address.firstName} ${order.address.lastName}`);
-    doc.text(`Email: ${order.address.email}`);
-    doc.moveDown();
+    // Design Colors
+    const primaryColor = '#e74c3c'; // Red
+    const textColor = '#333333';
+    const lightBg = '#f9f9f9';
+    const successBg = '#dff0d8';
+    const successText = '#3c763d';
 
-    // Items
-    const startX = 50;
-    let currentY = doc.y;
+    // Top Red Bar
+    doc.rect(50, 45, 510, 15).fill(primaryColor);
 
-    doc.font('Helvetica-Bold');
-    doc.text('Item', startX, currentY);
-    doc.text('Qty', startX + 200, currentY);
-    doc.text('Price', startX + 300, currentY);
-    doc.text('Total', startX + 400, currentY);
-    doc.moveDown();
+    // Header Title
+    doc.fillColor(textColor)
+      .fontSize(30)
+      .font('Helvetica-Bold')
+      .text('INVOICE', 50, 80);
 
-    doc.font('Helvetica');
-    order.items.forEach(item => {
-      currentY = doc.y;
-      doc.text(item.name.substring(0, 30), startX, currentY);
-      doc.text(item.quantity.toString(), startX + 200, currentY);
-      doc.text(`Rs.${item.price}`, startX + 300, currentY);
-      doc.text(`Rs.${item.price * item.quantity}`, startX + 400, currentY);
-      doc.moveDown();
+    // Date and ID on the right
+    doc.fontSize(10)
+      .font('Helvetica')
+      .text(`DATE: ${new Date(order.date).toLocaleDateString()}`, 400, 85, { align: 'right' });
+    doc.text(`INVOICE NO: ${order._id.toString().slice(-6).toUpperCase()}`, 400, 100, { align: 'right' });
+
+    // Logo if exists
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 470, 120, { width: 80 });
+    }
+
+    // Company Info
+    doc.fontSize(10)
+      .font('Helvetica')
+      .fillColor(textColor)
+      .text('MAT Traders', 50, 130)
+      .text('123 Textile Avenue', 50, 145)
+      .text('Salai Road, Trichy - 620001', 50, 160)
+      .text('Phone: +91 98765 43210', 50, 175)
+      .text('Email: support@mat.com', 50, 190);
+
+    doc.moveDown(2);
+
+    // Bill To & Ship To
+    const topY = 230;
+    const billToX = 50;
+    const shipToX = 300;
+
+    doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('BILL TO', billToX, topY);
+    doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('SHIP TO', shipToX, topY);
+
+    doc.fillColor(textColor).font('Helvetica').fontSize(10);
+    // Bill To Content
+    doc.text(`${order.address.firstName} ${order.address.lastName}`, billToX, topY + 20);
+    doc.text(`${order.address.street}`, billToX, topY + 35);
+    doc.text(`${order.address.city}, ${order.address.state} - ${order.address.zipcode}`, billToX, topY + 50);
+    doc.text(`Phone: ${order.address.phone}`, billToX, topY + 65);
+
+    // Ship To Content
+    doc.text(`${order.address.firstName} ${order.address.lastName}`, shipToX, topY + 20);
+    doc.text(`${order.address.street}`, shipToX, topY + 35);
+    doc.text(`${order.address.city}, ${order.address.state} - ${order.address.zipcode}`, shipToX, topY + 50);
+    doc.text(`Phone: ${order.address.phone}`, shipToX, topY + 65);
+
+    doc.moveDown(4);
+
+    // Table Header
+    const tableTop = 350;
+    doc.rect(50, tableTop, 510, 20).fill(primaryColor);
+    doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(10);
+    doc.text('DESCRIPTION', 60, tableTop + 5);
+    doc.text('QTY', 350, tableTop + 5, { width: 50, align: 'center' });
+    doc.text('UNIT PRICE', 410, tableTop + 5, { width: 70, align: 'center' });
+    doc.text('TOTAL', 490, tableTop + 5, { width: 60, align: 'right' });
+
+    // Table Items
+    let currentY = tableTop + 25;
+    doc.fillColor(textColor).font('Helvetica');
+
+    order.items.forEach((item, index) => {
+      if (index % 2 === 1) {
+        doc.rect(50, currentY - 2, 510, 18).fill(lightBg);
+        doc.fillColor(textColor);
+      }
+
+      doc.text(item.name, 60, currentY);
+      doc.text(item.quantity.toString(), 350, currentY, { width: 50, align: 'center' });
+      doc.text(`₹${item.price}`, 410, currentY, { width: 70, align: 'center' });
+      doc.text(`₹${item.price * item.quantity}`, 490, currentY, { width: 60, align: 'right' });
+
+      currentY += 20;
     });
 
-    doc.moveDown();
-    doc.font('Helvetica-Bold');
-    doc.text(`Grand Total: Rs.${order.amount}`, { align: 'right' });
+    // Summary Section
+    currentY += 20;
+    const summaryX = 350;
+    const deliveryCharge = 5;
+    const subtotal = order.amount - deliveryCharge;
+
+    doc.font('Helvetica').fontSize(10);
+
+    // Subtotal
+    doc.text('SUBTOTAL', summaryX, currentY);
+    doc.text(`₹${subtotal}`, 480, currentY, { width: 70, align: 'right' });
+    currentY += 15;
+
+    // Discount (Placeholder)
+    doc.text('DISCOUNT', summaryX, currentY);
+    doc.text(`₹0.00`, 480, currentY, { width: 70, align: 'right' });
+    currentY += 15;
+
+    // Tax
+    doc.text('TAX RATE (0%)', summaryX, currentY);
+    doc.text(`₹0.00`, 480, currentY, { width: 70, align: 'right' });
+    currentY += 15;
+
+    // Shipping
+    doc.text('SHIPPING/HANDLING', summaryX, currentY);
+    doc.text(`₹${deliveryCharge}.00`, 480, currentY, { width: 70, align: 'right' });
+    currentY += 25;
+
+    // Balance Due
+    doc.rect(summaryX - 10, currentY - 5, 220, 25).fill(successBg);
+    doc.fillColor(successText).font('Helvetica-Bold').fontSize(12);
+    doc.text('BALANCE DUE', summaryX, currentY);
+    doc.text(`₹${order.amount}.00`, 480, currentY, { width: 70, align: 'right' });
+
+    // Footer
+    doc.fillColor(textColor)
+      .font('Helvetica-Oblique')
+      .fontSize(10)
+      .text('Thank you for your business!', 50, 700, { align: 'center' });
+
+    // Bottom Red Bar
+    doc.rect(50, 750, 510, 15).fill(primaryColor);
 
     doc.end();
 

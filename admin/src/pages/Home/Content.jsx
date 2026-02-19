@@ -48,6 +48,22 @@ const Content = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    if (window.confirm("Are you sure you want to remove this user?")) {
+      try {
+        const response = await axios.post(`${url}/api/user/remove`, { id: userId });
+        if (response.data.success) {
+          toast.success("User removed successfully");
+          fetchDashboardData();
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error("Error removing user");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchDashboardData();
   }, []);
@@ -118,6 +134,7 @@ const Content = () => {
             <span>User</span>
             <span>Email</span>
             <span>Last Login</span>
+            <span style={{ textAlign: 'right' }}>Actions</span>
           </div>
           {activity.length > 0 ? (
             activity.map((user, index) => {
@@ -133,6 +150,11 @@ const Content = () => {
                   </div>
                   <span>{user.email}</span>
                   <span>{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never'}</span>
+                  <div className="user-actions" style={{ textAlign: 'right' }}>
+                    <button className="user-remove-btn" onClick={() => deleteUser(user._id)} title="Remove User">
+                      🗑️
+                    </button>
+                  </div>
                 </div>
               );
             })

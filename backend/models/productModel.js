@@ -28,6 +28,14 @@ const productSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    tax: {
+        type: Number,
+        default: 0
+    },
+    deliveryCharge: {
+        type: Number,
+        default: 0
+    },
     extraImages: {
         type: [String],
         default: []

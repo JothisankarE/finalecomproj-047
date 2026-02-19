@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <div className='footer' id='footer'>      
       <hr />
-      <p className="footer-copyright" style={{ textDecoration: 'none', color: 'inherit' }}>Copyright 2025 © KathithimalaiTextile.com - All Rights Reserved.</p>
+      <p className="footer-copyright" style={{ textDecoration: 'none', color: 'inherit' }}>Copyright 2026 © KathithimalaiTextile.com - All Rights Reserved.</p>
     </div>
   );
 };

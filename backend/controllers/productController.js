@@ -29,9 +29,11 @@ const addProduct = async (req, res) => {
         const product = new productModel({
             name: req.body.name,
             description: req.body.description,
-            price: req.body.price,
+            price: Number(req.body.price),
             category: req.body.category,
-            stock: req.body.stock,
+            stock: Number(req.body.stock),
+            tax: Number(req.body.tax) || 0,
+            deliveryCharge: Number(req.body.deliveryCharge) || 0,
             image: image_filename,
             extraImages: extra_images
         })
@@ -136,11 +138,74 @@ const updatePrice = async (req, res) => {
     }
 }
 
+// update Product
+const updateProduct = async (req, res) => {
+    try {
+        const { id, name, description, price, category, stock, tax, deliveryCharge } = req.body;
+
+        if (!id) {
+            return res.status(400).json({ success: false, message: "Product ID is required" });
+        }
+
+        let updateData = {
+            name,
+            description,
+            price: Number(price),
+            category,
+            stock: Number(stock),
+            tax: Number(tax),
+            deliveryCharge: Number(deliveryCharge)
+        };
+
+        if (req.files && req.files.length > 0) {
+            // New images uploaded
+            console.log("Detecting new images, cleaning up old ones...");
+            const product = await productModel.findById(id);
+            if (!product) {
+                return res.status(404).json({ success: false, message: "Product not found" });
+            }
+
+            if (product.image) {
+                const mainImagePath = `uploads/${product.image}`;
+                if (fs.existsSync(mainImagePath)) {
+                    fs.unlink(mainImagePath, (err) => { if (err) console.log("Error unlinking main image:", err) });
+                }
+            }
+            if (product.extraImages && Array.isArray(product.extraImages)) {
+                product.extraImages.forEach(img => {
+                    const extraPath = `uploads/${img}`;
+                    if (fs.existsSync(extraPath)) {
+                        fs.unlink(extraPath, (err) => { if (err) console.log("Error unlinking extra image:", err) });
+                    }
+                });
+            }
+
+            updateData.image = req.files[0].filename;
+            if (req.files.length > 1) {
+                updateData.extraImages = req.files.slice(1).map(file => file.filename);
+            } else {
+                updateData.extraImages = [];
+            }
+        }
+
+        const updatedProduct = await productModel.findByIdAndUpdate(id, updateData, { new: true });
+        if (!updatedProduct) {
+            return res.status(404).json({ success: false, message: "Product not found to update" });
+        }
+
+        res.json({ success: true, message: "Product Updated Successfully", data: updatedProduct });
+    } catch (error) {
+        console.error("Update Product Error Details:", error);
+        res.status(500).json({ success: false, message: "Server Error: " + error.message });
+    }
+}
+
 module.exports = {
     listProduct,
     addProduct,
     removeProduct,
     bulkAddProduct,
     updateStock,
-    updatePrice
+    updatePrice,
+    updateProduct
 }

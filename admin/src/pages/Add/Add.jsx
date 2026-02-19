@@ -11,7 +11,9 @@ const Add = () => {
         description: "",
         price: "",
         category: "Lungi",
-        stock: ""
+        stock: "",
+        tax: "0",
+        deliveryCharge: "0"
     });
 
     const [image, setImage] = useState(false);
@@ -27,6 +29,8 @@ const Add = () => {
         formData.append("price", Number(data.price));
         formData.append("category", data.category);
         formData.append("stock", Number(data.stock));
+        formData.append("tax", Number(data.tax));
+        formData.append("deliveryCharge", Number(data.deliveryCharge));
 
         if (image) {
             formData.append("image", image);
@@ -41,7 +45,9 @@ const Add = () => {
                     description: "",
                     price: "",
                     category: "Lungi",
-                    stock: ""
+                    stock: "",
+                    tax: "0",
+                    deliveryCharge: "0"
                 })
                 setImage(false);
                 setTimeout(() => setShowSuccessPopup(false), 3000);
@@ -170,13 +176,33 @@ const Add = () => {
                                     </select>
                                 </div>
                                 <div className='input-block'>
-                                    <label>Price (₹)</label>
+                                    <label>Base Price (₹)</label>
                                     <input type="Number" name='price' onChange={onChangeHandler} value={data.price} placeholder='0.00' required />
+                                </div>
+                                <div className='input-block'>
+                                    <label>Tax (%) [GST]</label>
+                                    <input type="Number" name='tax' onChange={onChangeHandler} value={data.tax} placeholder='0' required />
+                                </div>
+                                <div className='input-block'>
+                                    <label>Delivery Fee (₹)</label>
+                                    <input type="Number" name='deliveryCharge' onChange={onChangeHandler} value={data.deliveryCharge} placeholder='0' required />
                                 </div>
                                 <div className='input-block'>
                                     <label>Stock Quantity</label>
                                     <input type="Number" name='stock' onChange={onChangeHandler} value={data.stock} placeholder='0' required />
                                 </div>
+                            </div>
+
+                            <div className="pricing-summary">
+                                <div className="summary-row">
+                                    <span>GST Amount ({data.tax}%):</span>
+                                    <span>₹{((Number(data.price) * Number(data.tax)) / 100).toFixed(2)}</span>
+                                </div>
+                                <div className="summary-row total">
+                                    <span>Final Selling Price:</span>
+                                    <span className="final-price">₹{(Number(data.price) + (Number(data.price) * Number(data.tax) / 100) + Number(data.deliveryCharge)).toFixed(2)}</span>
+                                </div>
+                                <p className="summary-note">* Includes base price + GST + delivery charges</p>
                             </div>
                         </div>
 
