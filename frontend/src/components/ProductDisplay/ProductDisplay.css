@@ -1,0 +1,196 @@
+/* =============================================
+   PRODUCT DISPLAY — Minimalist E-commerce UI
+   Matches reference: tag · heading · tabs · grid
+============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ---- Outer wrapper ---- */
+.display {
+    margin: 40px auto 70px;
+    padding: 56px 52px 64px;
+    width: 92%;
+    max-width: 1380px;
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 2px 32px rgba(0, 0, 0, 0.04);
+}
+
+/* =============================
+   HEADER
+============================= */
+.display-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* "Products" — small spaced uppercase label */
+.display-tag {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 14px;
+}
+
+/* "Our Products" — bold heading */
+.display-header h2 {
+    font-size: 40px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -1px;
+    margin: 0 0 12px;
+    line-height: 1.15;
+}
+
+/* subtitle */
+.display-subtitle {
+    font-size: 14.5px;
+    color: #94a3b8;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* =============================
+   CATEGORY TABS
+============================= */
+.category-tabs-wrap {
+    margin-bottom: 36px;
+}
+
+.category-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.category-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+/* ---- Each Tab ---- */
+.cat-tab {
+    position: relative;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.2s ease;
+    letter-spacing: 0.1px;
+    line-height: 1;
+}
+
+.cat-tab:hover {
+    color: #0f172a;
+}
+
+/* Active state — bold dark text */
+.cat-tab--active {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+/* ---- Underline bar below tabs ---- */
+.cat-underline {
+    width: 100%;
+    height: 1.5px;
+    background: #f1f5f9;
+    border-radius: 2px;
+    position: relative;
+    margin-top: 2px;
+}
+
+/* Active tab bottom indicator */
+.cat-tab--active::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0f172a;
+    border-radius: 2px;
+}
+
+/* =============================
+   PRODUCT GRID
+============================= */
+.display-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 24px;
+    margin-top: 0;
+    row-gap: 36px;
+}
+
+/* =============================
+   EMPTY STATE
+============================= */
+.display-empty {
+    text-align: center;
+    padding: 72px 20px;
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+/* =============================
+   RESPONSIVE
+============================= */
+@media (max-width: 1024px) {
+    .display {
+        padding: 44px 32px 56px;
+    }
+
+    .display-header h2 {
+        font-size: 34px;
+    }
+}
+
+@media (max-width: 768px) {
+    .display {
+        padding: 36px 20px 48px;
+        width: 96%;
+        border-radius: 20px;
+    }
+
+    .display-header h2 {
+        font-size: 28px;
+    }
+
+    .cat-tab {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .display-list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+        row-gap: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .display {
+        padding: 28px 14px 40px;
+        border-radius: 14px;
+    }
+
+    .display-header h2 {
+        font-size: 24px;
+    }
+
+    .display-list {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}

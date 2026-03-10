@@ -1,0 +1,539 @@
+/* ========================================
+   Redesigned Premium Navbar
+   Aligns with Provided Reference Image
+   ======================================== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 60px;
+    background: #ffffff;
+    border-bottom: 1px solid #f2f4f7;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 72px;
+}
+
+/* Left Section: Logo & Greeting */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 280px;
+}
+
+.navbar-logo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-greeting {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.greeting-text {
+    font-size: 15px;
+    color: #475467;
+    line-height: 1.2;
+}
+
+.greeting-text b {
+    display: block;
+    font-size: 18px;
+    color: #101828;
+    font-weight: 700;
+}
+
+/* Center Menu */
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-menu li {
+    display: inline-block;
+}
+
+.navbar-menu a,
+.navbar-link {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #475467;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.navbar-menu a:hover,
+.navbar-link:hover {
+    color: #101828;
+    background: #f9fafb;
+}
+
+.navbar-menu a.active,
+.navbar-link.active {
+    color: #7f56d9;
+    background: #f9f5ff;
+    /* Light purple pill background */
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+/* Right Section: Icons & Buttons */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 280px;
+    justify-content: flex-end;
+}
+
+.navbar-cart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.navbar-cart:hover {
+    background: #f9fafb;
+}
+
+.navbar-cart-icon {
+    width: 26px;
+    height: 26px;
+    color: #475467;
+}
+
+.cart-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    background: #7f56d9;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+.navbar-profile {
+    position: relative;
+}
+
+.profile-img-container {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid #eaecf0;
+    transition: all 0.2s;
+    background: #f2f4f7;
+}
+
+.profile-img-container:hover {
+    box-shadow: 0 0 0 4px #f4ebff;
+    border-color: #d6bbfb;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.signin-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #7f56d9;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.signin-btn:hover {
+    background: #6941c6;
+}
+
+/* Dropdown styling */
+.navbar-item-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    width: 260px;
+    background: #ffffff;
+    border: 1px solid #eaecf0;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1001;
+}
+
+.navbar-item-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dropdown-category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #344054;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.dropdown-category-item:hover {
+    background: #f9fafb;
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-img {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+}
+
+.category-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.category-count {
+    font-size: 12px;
+    color: #667085;
+    background: #f2f4f7;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Profile Dropdown */
+.navbar-profile-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 220px;
+    background: #ffffff;
+    border: 1px solid #eaecf0;
+    border-radius: 12px;
+    box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+    padding: 8px;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all 0.2s ease;
+    z-index: 1002;
+}
+
+.navbar-profile:hover .navbar-profile-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.navbar-profile-dropdown li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #344054;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.navbar-profile-dropdown li:hover {
+    background: #f9fafb;
+}
+
+.navbar-profile-dropdown li svg,
+.navbar-profile-dropdown li img {
+    width: 18px;
+    height: 18px;
+    color: #667085;
+}
+
+.logout-item:hover {
+    color: #d92d20 !important;
+    background: #fef3f2 !important;
+}
+
+.logout-item:hover svg {
+    color: #d92d20 !important;
+}
+
+/* ============================================================
+   HAMBURGER BUTTON
+   ============================================================ */
+.navbar-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    z-index: 1100;
+}
+
+.navbar-hamburger:hover {
+    background: #f9fafb;
+}
+
+.navbar-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #344054;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+/* X state when open */
+.navbar-hamburger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.navbar-hamburger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.navbar-hamburger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================================
+   MOBILE DRAWER MENU
+   ============================================================ */
+.navbar-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #f2f4f7;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    z-index: 999;
+    flex-direction: column;
+    padding: 12px 20px 20px;
+    gap: 4px;
+    animation: mobileMenuIn 0.25s ease;
+}
+
+.navbar-mobile-menu.open {
+    display: flex;
+}
+
+@keyframes mobileMenuIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar-mobile-menu a,
+.navbar-mobile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #344054;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-mobile-menu a:hover,
+.navbar-mobile-link:hover {
+    background: #f9fafb;
+    color: #101828;
+}
+
+.navbar-mobile-menu a.active,
+.navbar-mobile-link.active {
+    background: #f9f5ff;
+    color: #7f56d9;
+}
+
+.navbar-mobile-divider {
+    height: 1px;
+    background: #f2f4f7;
+    margin: 8px 0;
+}
+
+.navbar-mobile-signin {
+    width: 100%;
+    padding: 13px;
+    margin-top: 4px;
+    background: #7f56d9;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.navbar-mobile-signin:hover {
+    background: #6941c6;
+}
+
+/* Overlay backdrop when menu is open */
+.navbar-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    top: 72px;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+}
+
+.navbar-mobile-overlay.open {
+    display: block;
+}
+
+/* ============================================================
+   BREAKPOINTS
+   ============================================================ */
+@media (max-width: 1100px) {
+    .navbar {
+        padding: 12px 30px;
+    }
+
+    .navbar-menu {
+        position: static;
+        transform: none;
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 850px) {
+    .navbar {
+        padding: 12px 20px;
+    }
+
+    .navbar-menu {
+        display: none;
+    }
+
+    .navbar-left,
+    .navbar-right {
+        min-width: auto;
+    }
+
+    .navbar-hamburger {
+        display: flex;
+    }
+
+    .navbar-greeting {
+        display: none;
+    }
+
+    .navbar-right {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 14px;
+        height: 60px;
+    }
+
+    .navbar-logo {
+        height: 38px;
+    }
+
+    .signin-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .profile-img-container {
+        width: 36px;
+        height: 36px;
+    }
+
+    .navbar-cart-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .navbar-mobile-menu {
+        top: 60px;
+    }
+
+    .navbar-mobile-overlay {
+        top: 60px;
+    }
+}
